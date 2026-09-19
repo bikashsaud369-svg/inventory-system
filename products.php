@@ -31,7 +31,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <nav class="nav">
       <a href="dashboard.php">🏠 Dashboard</a>
       <a href="products.php" class="active">📦 Products</a>
-      <a href="add-product.php">➕ Add Product</a>
+      <a href="add_product.php">➕ Add Product</a>
       <a href="logout.php">🚪 Logout</a>
     </nav>
   </div>
@@ -50,7 +50,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <?php endif; ?>
 
       <div class="filters">
-        <a href="add-product.php"><button class="btn-search">+ Add New Product</button></a>
+        <a href="add_product.php"><button class="btn-search">+ Add New Product</button></a>
       </div>
 
       <div class="table-card">
@@ -75,7 +75,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   <td>Rs. <?= number_format($row['price'], 2) ?></td>
                   <td><?= $row['quantity'] ?></td>
                   <td>
-                    <a href="edit-product.php?id=<?= $row['id'] ?>">
+                    <a href="edit_product.php?id=<?= $row['id'] ?>">
                       <button class="btn-sm">Edit</button>
                     </a>
                     <a href="products.php?delete=<?= $row['id'] ?>" 
