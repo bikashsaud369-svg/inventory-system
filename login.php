@@ -16,18 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($username) || empty($password)) {
         $error = "Please fill in all fields.";
     } else {
-        // ===== TEMPORARY LOGIN (replace with database later) =====
-        // Example: username = admin , password = admin123
-        if ($username === 'admin' && $password === 'admin123') {
-            $_SESSION['user_id']   = 1;
-            $_SESSION['username']  = 'admin';
-            $_SESSION['full_name'] = 'Admin';
-            header("Location: dashboard.php");
-            exit;
-        } else {
-            $error = "Invalid username or password.";
-        }
-
         //  ===== REAL DATABASE VERSION (uncomment when ready) =====
         $stmt = $pdo->prepare("SELECT id, username, password, full_name FROM users WHERE username = ?");
         $stmt->execute([$username]);
@@ -56,7 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
   <div class="login-card">
-    <div class="logo">📦</div>
     <h1>Inventory Management System</h1>
     <p class="subtitle">Login to your account</p>
 
@@ -68,11 +55,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <form method="POST" action="">
       <div class="input-group">
-        <span class="icon">👤</span>
         <input type="text" name="username" placeholder="Username" required value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
       </div>
       <div class="input-group">
-        <span class="icon">🔒</span>
         <input type="password" name="password" placeholder="Password" required>
       </div>
       <button type="submit" class="btn">Login</button>

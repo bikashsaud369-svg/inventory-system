@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 $host     = "localhost";
 $dbname   = "inventory_db";
 $username = "root";
-$password = "";          // keep empty if you have no password
+$password = "";          
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);

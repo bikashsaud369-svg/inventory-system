@@ -23,9 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (strlen($password) < 6) {
         $error = "Password must be at least 6 characters.";
     } else {
-        // ===== TEMPORARY SUCCESS (replace with database later) =====
-        $success = "Account created successfully! You can now <a href='login.php'>Login</a>.";
-
         // ===== REAL DATABASE VERSION =====
         try {
             $hashed = password_hash($password, PASSWORD_DEFAULT);
@@ -53,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
   <div class="login-card">
-    <div class="logo">📦</div>
+    <div class="logo"></div>
     <h1>Inventory Management System</h1>
     <p class="subtitle">Create a new account</p>
 
@@ -71,23 +68,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <form method="POST" action="">
       <div class="input-group">
-        <span class="icon">👤</span>
+        <span class="icon"></span>
         <input type="text" name="full_name" placeholder="Full Name" required value="<?= htmlspecialchars($_POST['full_name'] ?? '') ?>">
       </div>
       <div class="input-group">
-        <span class="icon">✉️</span>
+        <span class="icon"></span>
         <input type="email" name="email" placeholder="Email Address" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
       </div>
       <div class="input-group">
-        <span class="icon">👤</span>
+        <span class="icon"></span>
         <input type="text" name="username" placeholder="Username" required value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
       </div>
       <div class="input-group">
-        <span class="icon">🔒</span>
+        <span class="icon"></span>
         <input type="password" name="password" placeholder="Password" required>
       </div>
       <div class="input-group">
-        <span class="icon">🔒</span>
+        <span class="icon"></span>
         <input type="password" name="confirm_password" placeholder="Confirm Password" required>
       </div>
       <button type="submit" class="btn">Sign Up</button>

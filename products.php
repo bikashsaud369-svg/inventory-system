@@ -27,12 +27,12 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
   <div class="sidebar">
-    <div class="brand"><span>📦</span> Inventory</div>
+    <div class="brand"><span></span> Inventory</div>
     <nav class="nav">
-      <a href="dashboard.php">🏠 Dashboard</a>
-      <a href="products.php" class="active">📦 Products</a>
-      <a href="add_product.php">➕ Add Product</a>
-      <a href="logout.php">🚪 Logout</a>
+      <a href="dashboard.php"> Dashboard</a>
+      <a href="products.php" class="active"> Products</a>
+      <a href="add_product.php"> Add Product</a>
+      <a href="logout.php"> Logout</a>
     </nav>
   </div>
 
