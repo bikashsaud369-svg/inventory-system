@@ -1,8 +1,4 @@
 <?php
-// ============================================
-// ADD_PRODUCT.PHP - Insert New Product
-// ============================================
-
 require_once 'config.php';
 requireLogin(); // Only logged-in users can add products
 
@@ -24,9 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Please fill in all required fields.";
     } else {
         try {
-            // ============================================
-            // INSERT Query using Prepared Statement
-            // ============================================
             // ? are placeholders to prevent SQL Injection
             $stmt = $pdo->prepare("INSERT INTO products (name, category, price, quantity) VALUES (?, ?, ?, ?)");
             
@@ -53,12 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
   <div class="sidebar">
-    <div class="brand"><span>📦</span> Inventory</div>
+    <div class="brand"><span></span> Inventory</div>
     <nav class="nav">
-      <a href="dashboard.php">🏠 Dashboard</a>
-      <a href="products.php">📦 Products</a>
-      <a href="add_product.php" class="active">➕ Add Product</a>
-      <a href="logout.php">🚪 Logout</a>
+      <a href="dashboard.php"> Dashboard</a>
+      <a href="products.php"> Products</a>
+      <a href="add_product.php" class="active"> Add Product</a>
+      <a href="logout.php">Logout</a>
     </nav>
   </div>
 

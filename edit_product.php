@@ -1,8 +1,4 @@
 <?php
-// ============================================
-// EDIT_PRODUCT.PHP - Update Existing Product
-// ============================================
-
 require_once 'config.php';
 requireLogin();
 
@@ -11,9 +7,6 @@ $id = $_GET['id'] ?? 0; // Get product ID from URL
 $message = "";
 $error = "";
 
-// ============================================
-// FETCH Product Data to show in form
-// ============================================
 $stmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
 $stmt->execute([$id]);
 $product = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -24,9 +17,9 @@ if (!$product) {
     exit;
 }
 
-// ============================================
+
 // UPDATE Product when form is submitted
-// ============================================
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $name     = trim($_POST['name'] ?? '');
@@ -62,12 +55,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
   <div class="sidebar">
-    <div class="brand"><span>📦</span> Inventory</div>
+    <div class="brand"><span></span> Inventory</div>
     <nav class="nav">
-      <a href="dashboard.php">🏠 Dashboard</a>
-      <a href="products.php" class="active">📦 Products</a>
-      <a href="add_product.php">➕ Add Product</a>
-      <a href="logout.php">🚪 Logout</a>
+      <a href="dashboard.php"> Dashboard</a>
+      <a href="products.php" class="active"> Products</a>
+      <a href="add_product.php"> Add Product</a>
+      <a href="logout.php"> Logout</a>
     </nav>
   </div>
 

@@ -1,16 +1,11 @@
 <?php
-// ============================================
-// PRODUCTS.PHP - View, Search & Delete Products
-// ============================================
 
 require_once 'config.php';
-requireLogin(); // Protect this page
+requireLogin();
 
 $username = $_SESSION['full_name'] ?? $_SESSION['username'] ?? 'Admin';
 
-// ============================================
-// DELETE Product
-// ============================================
+
 if (isset($_GET['delete'])) {
     $id = $_GET['delete']; // Get product ID from URL
 
@@ -23,11 +18,9 @@ if (isset($_GET['delete'])) {
     exit;
 }
 
-// ============================================
-// FETCH All Products from Database
-// ============================================
+
 $stmt = $pdo->query("SELECT * FROM products ORDER BY id DESC");
-$products = $stmt->fetchAll(PDO::FETCH_ASSOC); // Get all products as array
+$products = $stmt->fetchAll(PDO::FETCH_ASSOC); 
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -39,12 +32,12 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC); // Get all products as array
 </head>
 <body>
   <div class="sidebar">
-    <div class="brand"><span>📦</span> Inventory</div>
+    <div class="brand"><span></span> Inventory</div>
     <nav class="nav">
-      <a href="dashboard.php">🏠 Dashboard</a>
-      <a href="products.php" class="active">📦 Products</a>
-      <a href="add_product.php">➕ Add Product</a>
-      <a href="logout.php">🚪 Logout</a>
+      <a href="dashboard.php"> Dashboard</a>
+      <a href="products.php" class="active"> Products</a>
+      <a href="add_product.php"> Add Product</a>
+      <a href="logout.php">Logout</a>
     </nav>
   </div>
 

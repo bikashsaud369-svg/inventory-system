@@ -1,17 +1,15 @@
 <?php
-// ============================================
-// LOGIN.PHP - User Authentication
-// ============================================
 
-require_once 'config.php'; // Include database connection and session functions
 
-// If user is already logged in, go directly to dashboard
+require_once 'config.php'; 
+
+
 if (isLoggedIn()) {
     header("Location: dashboard.php");
     exit;
 }
 
-$error = ""; // Variable to store error message
+$error = ""; 
 
 // Check if form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -20,23 +18,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = trim($_POST['password'] ?? '');
 
-    // Validation: Check if fields are empty
+    // Validation
     if (empty($username) || empty($password)) {
         $error = "Please fill in all fields.";
     } else {
 
-        // ===== Temporary Login (for testing) =====
-        // Username: admin  |  Password: admin123
-        if ($username === 'admin' && $password === 'admin123') {
-            $_SESSION['user_id']   = 1;
-            $_SESSION['username']  = 'admin';
-            $_SESSION['full_name'] = 'Admin';
-            header("Location: dashboard.php");
-            exit;
-        }
-
-        // ===== Real Database Login (Recommended) =====
-        // Prepare SQL query with placeholder (?) to prevent SQL Injection
         $stmt = $pdo->prepare("SELECT id, username, password, full_name FROM users WHERE username = ?");
         $stmt->execute([$username]); // Execute query with actual username
         $user = $stmt->fetch(PDO::FETCH_ASSOC); // Get user data as array
@@ -67,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
   <div class="login-card">
-    <div class="logo">📦</div>
+    <div class="logo"></div>
     <h1>Inventory Management System</h1>
     <p class="subtitle">Login to your account</p>
 
@@ -79,11 +65,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <form method="POST" action="">
       <div class="input-group">
-        <span class="icon">👤</span>
+        <span class="icon"></span>
         <input type="text" name="username" placeholder="Username" required value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
       </div>
       <div class="input-group">
-        <span class="icon">🔒</span>
+        <span class="icon"></span>
         <input type="password" name="password" placeholder="Password" required>
       </div>
       <button type="submit" class="btn">Login</button>
