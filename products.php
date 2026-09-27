@@ -1,21 +1,33 @@
 <?php
+// ============================================
+// PRODUCTS.PHP - View, Search & Delete Products
+// ============================================
+
 require_once 'config.php';
-requireLogin();
+requireLogin(); // Protect this page
 
 $username = $_SESSION['full_name'] ?? $_SESSION['username'] ?? 'Admin';
 
-// Handle Delete
+// ============================================
+// DELETE Product
+// ============================================
 if (isset($_GET['delete'])) {
-    $id = $_GET['delete'];
+    $id = $_GET['delete']; // Get product ID from URL
+
+    // Prepare DELETE query (safe from SQL Injection)
     $stmt = $pdo->prepare("DELETE FROM products WHERE id = ?");
-    $stmt->execute([$id]);
+    $stmt->execute([$id]); // Delete the product
+
+    // Redirect back with success message
     header("Location: products.php?success=Product deleted successfully");
     exit;
 }
 
-// Fetch all products
+// ============================================
+// FETCH All Products from Database
+// ============================================
 $stmt = $pdo->query("SELECT * FROM products ORDER BY id DESC");
-$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$products = $stmt->fetchAll(PDO::FETCH_ASSOC); // Get all products as array
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,12 +39,12 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
   <div class="sidebar">
-    <div class="brand"><span></span> Inventory</div>
+    <div class="brand"><span>📦</span> Inventory</div>
     <nav class="nav">
-      <a href="dashboard.php"> Dashboard</a>
-      <a href="products.php" class="active"> Products</a>
-      <a href="add_product.php"> Add Product</a>
-      <a href="logout.php"> Logout</a>
+      <a href="dashboard.php">🏠 Dashboard</a>
+      <a href="products.php" class="active">📦 Products</a>
+      <a href="add_product.php">➕ Add Product</a>
+      <a href="logout.php">🚪 Logout</a>
     </nav>
   </div>
 
@@ -67,7 +79,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
           </thead>
           <tbody>
             <?php if (count($products) > 0): ?>
-              <?php foreach ($products as $row): ?>
+              <?php foreach ($products as $row): ?> <!-- Loop through each product -->
                 <tr>
                   <td><?= $row['id'] ?></td>
                   <td><?= htmlspecialchars($row['name']) ?></td>
@@ -75,9 +87,11 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   <td>Rs. <?= number_format($row['price'], 2) ?></td>
                   <td><?= $row['quantity'] ?></td>
                   <td>
+                    <!-- Edit Button -->
                     <a href="edit_product.php?id=<?= $row['id'] ?>">
                       <button class="btn-sm">Edit</button>
                     </a>
+                    <!-- Delete Button with confirmation -->
                     <a href="products.php?delete=<?= $row['id'] ?>" 
                        onclick="return confirm('Are you sure you want to delete this product?')">
                       <button class="btn-sm btn-danger">Delete</button>

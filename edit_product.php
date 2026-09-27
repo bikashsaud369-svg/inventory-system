@@ -1,23 +1,34 @@
 <?php
+// ============================================
+// EDIT_PRODUCT.PHP - Update Existing Product
+// ============================================
+
 require_once 'config.php';
 requireLogin();
 
 $username = $_SESSION['full_name'] ?? $_SESSION['username'] ?? 'Admin';
-$id = $_GET['id'] ?? 0;
+$id = $_GET['id'] ?? 0; // Get product ID from URL
 $message = "";
 $error = "";
 
-// Fetch product
+// ============================================
+// FETCH Product Data to show in form
+// ============================================
 $stmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
 $stmt->execute([$id]);
 $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// If product not found, go back to products page
 if (!$product) {
     header("Location: products.php");
     exit;
 }
 
+// ============================================
+// UPDATE Product when form is submitted
+// ============================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
     $name     = trim($_POST['name'] ?? '');
     $category = trim($_POST['category'] ?? '');
     $price    = trim($_POST['price'] ?? '');
@@ -27,10 +38,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Please fill in all required fields.";
     } else {
         try {
+            // UPDATE query using Prepared Statement
             $stmt = $pdo->prepare("UPDATE products SET name=?, category=?, price=?, quantity=? WHERE id=?");
             $stmt->execute([$name, $category, $price, $quantity, $id]);
+
+            // Redirect after successful update
             header("Location: products.php?success=Product updated successfully");
             exit;
+
         } catch (PDOException $e) {
             $error = "Error: " . $e->getMessage();
         }
@@ -47,12 +62,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
   <div class="sidebar">
-    <div class="brand"><span></span> Inventory</div>
+    <div class="brand"><span>📦</span> Inventory</div>
     <nav class="nav">
-      <a href="dashboard.php"> Dashboard</a>
-      <a href="products.php" class="active"> Products</a>
-      <a href="add-product.php"> Add Product</a>
-      <a href="logout.php"> Logout</a>
+      <a href="dashboard.php">🏠 Dashboard</a>
+      <a href="products.php" class="active">📦 Products</a>
+      <a href="add_product.php">➕ Add Product</a>
+      <a href="logout.php">🚪 Logout</a>
     </nav>
   </div>
 
