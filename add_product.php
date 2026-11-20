@@ -1,25 +1,35 @@
 <?php
 require_once 'config.php';
-requireLogin();
+requireLogin(); // Only logged-in users can add products
 
 $username = $_SESSION['full_name'] ?? $_SESSION['username'] ?? 'Admin';
 $message = "";
 $error = "";
 
+// Check if form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    // Get form data and remove extra spaces
     $name     = trim($_POST['name'] ?? '');
     $category = trim($_POST['category'] ?? '');
     $price    = trim($_POST['price'] ?? '');
     $quantity = trim($_POST['quantity'] ?? '');
 
+    // Validation
     if (empty($name) || empty($category) || empty($price) || empty($quantity)) {
         $error = "Please fill in all required fields.";
     } else {
         try {
+            // ? are placeholders to prevent SQL Injection
             $stmt = $pdo->prepare("INSERT INTO products (name, category, price, quantity) VALUES (?, ?, ?, ?)");
+            
+            // Execute the query with real values
             $stmt->execute([$name, $category, $price, $quantity]);
+
+            // Redirect to products page after successful insert
             header("Location: products.php?success=Product added successfully");
             exit;
+
         } catch (PDOException $e) {
             $error = "Error: " . $e->getMessage();
         }
@@ -36,12 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
   <div class="sidebar">
-    <div class="brand"><span>📦</span> Inventory</div>
+    <div class="brand"><span></span> Inventory</div>
     <nav class="nav">
-      <a href="dashboard.php">🏠 Dashboard</a>
-      <a href="products.php">📦 Products</a>
-      <a href="add-product.php" class="active">➕ Add Product</a>
-      <a href="logout.php">🚪 Logout</a>
+      <a href="dashboard.php"> Dashboard</a>
+      <a href="products.php"> Products</a>
+      <a href="add_product.php" class="active"> Add Product</a>
+      <a href="logout.php">Logout</a>
     </nav>
   </div>
 

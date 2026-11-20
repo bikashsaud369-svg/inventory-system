@@ -1,8 +1,22 @@
 <?php
 require_once 'config.php';
-requireLogin();
+requireLogin(); // Only logged-in users can access this page
 
+// Get logged-in user's name from session
 $username = $_SESSION['full_name'] ?? $_SESSION['username'] ?? 'Admin';
+
+
+// Get Real Data from Database
+// Total number of products
+// $pdo make connection to db and query helps to fatch the data 
+//it protect from sql injection
+$totalProducts = $pdo->query("SELECT COUNT(*) FROM products")->fetchColumn();
+$totalStock = $pdo->query("SELECT SUM(quantity) FROM products")->fetchColumn() ?? 0;
+$lowStock = $pdo->query("SELECT COUNT(*) FROM products WHERE quantity <= 10")->fetchColumn();
+
+// Get latest 5 products for the table
+$stmt = $pdo->query("SELECT * FROM products ORDER BY id DESC LIMIT 5");
+$recentProducts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,12 +28,12 @@ $username = $_SESSION['full_name'] ?? $_SESSION['username'] ?? 'Admin';
 </head>
 <body>
   <div class="sidebar">
-    <div class="brand"><span>📦</span> Inventory</div>
+    <div class="brand"><span></span>Inventory</div>
     <nav class="nav">
-      <a href="dashboard.php" class="active">🏠 Dashboard</a>
-      <a href="products.php">📦 Products</a>
-      <a href="add-product.php">➕ Add Product</a>
-      <a href="logout.php">🚪 Logout</a>
+      <a href="dashboard.php" class="active">Dashboard</a>
+      <a href="products.php">Products</a>
+      <a href="add_product.php">Add Product</a>
+      <a href="logout.php">Logout</a>
     </nav>
   </div>
 
@@ -30,30 +44,32 @@ $username = $_SESSION['full_name'] ?? $_SESSION['username'] ?? 'Admin';
     </div>
 
     <div class="content">
+      <!-- Statistics Cards -->
       <div class="stats">
         <div class="stat-card">
-          <div class="icon">📦</div>
+          <div class="icon"></div>
           <div>
-            <h3>Total Products</h3>
-            <p>12</p>
+            <h3>Total Products</h3> 
+            <p><?= $totalProducts ?></p> <!-- Real count from database -->
           </div>
         </div>
         <div class="stat-card">
-          <div class="icon">🗄️</div>
+          <div class="icon"></div>
           <div>
             <h3>Total Stock</h3>
-            <p>248</p>
+            <p><?= $totalStock ?></p> <!-- Real sum from database -->
           </div>
         </div>
         <div class="stat-card">
-          <div class="icon">⚠️</div>
+          <div class="icon"></div>
           <div>
             <h3>Low Stock</h3>
-            <p>3</p>
+            <p><?= $lowStock ?></p> <!-- Real low stock count -->
           </div>
         </div>
       </div>
 
+      <!-- Recent Products Table -->
       <div class="table-card">
         <h3>Recent Products</h3>
         <table>
@@ -68,41 +84,31 @@ $username = $_SESSION['full_name'] ?? $_SESSION['username'] ?? 'Admin';
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td><td>Rice</td><td>Food</td><td>Rs. 120</td><td>50</td>
-              <td>
-                <a href="edit-product.php?id=1"><button class="btn-sm">Edit</button></a>
-                <button class="btn-sm btn-danger">Delete</button>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td><td>Cooking Oil</td><td>Grocery</td><td>Rs. 250</td><td>20</td>
-              <td>
-                <a href="edit-product.php?id=2"><button class="btn-sm">Edit</button></a>
-                <button class="btn-sm btn-danger">Delete</button>
-              </td>
-            </tr>
-            <tr>
-              <td>3</td><td>Soap</td><td>Household</td><td>Rs. 55</td><td>5</td>
-              <td>
-                <a href="edit-product.php?id=3"><button class="btn-sm">Edit</button></a>
-                <button class="btn-sm btn-danger">Delete</button>
-              </td>
-            </tr>
-            <tr>
-              <td>4</td><td>Biscuit</td><td>Food</td><td>Rs. 40</td><td>30</td>
-              <td>
-                <a href="edit-product.php?id=4"><button class="btn-sm">Edit</button></a>
-                <button class="btn-sm btn-danger">Delete</button>
-              </td>
-            </tr>
-            <tr>
-              <td>5</td><td>Shampoo</td><td>Personal Care</td><td>Rs. 180</td><td>12</td>
-              <td>
-                <a href="edit-product.php?id=5"><button class="btn-sm">Edit</button></a>
-                <button class="btn-sm btn-danger">Delete</button>
-              </td>
-            </tr>
+            <?php if (count($recentProducts) > 0): ?>
+              <?php foreach ($recentProducts as $row): ?>
+                <tr>
+                  <td><?= $row['id'] ?></td>
+                  <td><?= htmlspecialchars($row['name']) ?></td>
+                  <td><?= htmlspecialchars($row['category']) ?></td>
+                  <td>Rs. <?= number_format($row['price'], 2) ?></td>
+                  <td><?= $row['quantity'] ?></td>
+                  <td>
+                    <a href="edit_product.php?id=<?= $row['id'] ?>">
+                      <button class="btn-sm">Edit</button>
+                    </a>
+                    <a href="products.php?delete=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')">
+                      <button class="btn-sm btn-danger">Delete</button>
+                    </a>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <tr>
+                <td colspan="6" style="text-align:center; padding:20px;">
+                  No products found. <a href="add_product.php">Add your first product</a>
+                </td>
+              </tr>
+            <?php endif; ?>
           </tbody>
         </table>
       </div>

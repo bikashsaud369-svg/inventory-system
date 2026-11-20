@@ -1,48 +1,45 @@
 <?php
-require_once 'config.php';
 
-// If already logged in → go to dashboard
+
+require_once 'config.php'; 
+
+
 if (isLoggedIn()) {
     header("Location: dashboard.php");
     exit;
 }
 
-$error = "";
+$error = ""; 
 
+// Check if form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    // Get username and password from form (trim removes extra spaces)
     $username = trim($_POST['username'] ?? '');
     $password = trim($_POST['password'] ?? '');
 
+    // Validation
     if (empty($username) || empty($password)) {
         $error = "Please fill in all fields.";
     } else {
-        // ===== TEMPORARY LOGIN (replace with database later) =====
-        // Example: username = admin , password = admin123
-        if ($username === 'admin' && $password === 'admin123') {
-            $_SESSION['user_id']   = 1;
-            $_SESSION['username']  = 'admin';
-            $_SESSION['full_name'] = 'Admin';
-            header("Location: dashboard.php");
-            exit;
-        } else {
-            $error = "Invalid username or password.";
-        }
 
-        //  ===== REAL DATABASE VERSION (uncomment when ready) =====
         $stmt = $pdo->prepare("SELECT id, username, password, full_name FROM users WHERE username = ?");
-        $stmt->execute([$username]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->execute([$username]); // Execute query with actual username
+        $user = $stmt->fetch(PDO::FETCH_ASSOC); // Get user data as array
 
+        // Check if user exists and password is correct
         if ($user && password_verify($password, $user['password'])) {
+            // Store user information in session
             $_SESSION['user_id']   = $user['id'];
             $_SESSION['username']  = $user['username'];
             $_SESSION['full_name'] = $user['full_name'];
+
+            // Redirect to dashboard after successful login
             header("Location: dashboard.php");
             exit;
         } else {
             $error = "Invalid username or password.";
         }
-        
     }
 }
 ?>
@@ -56,23 +53,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
   <div class="login-card">
-    <div class="logo">📦</div>
+    <div class="logo"></div>
     <h1>Inventory Management System</h1>
     <p class="subtitle">Login to your account</p>
 
     <?php if ($error): ?>
       <div style="background:#fee2e2; color:#b91c1c; padding:10px; border-radius:8px; margin-bottom:15px; font-size:14px;">
-        <?= htmlspecialchars($error) ?>
+        <?= htmlspecialchars($error) ?> <!-- Show error message safely -->
       </div>
     <?php endif; ?>
 
     <form method="POST" action="">
       <div class="input-group">
-        <span class="icon">👤</span>
+        <span class="icon"></span>
         <input type="text" name="username" placeholder="Username" required value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
       </div>
       <div class="input-group">
-        <span class="icon">🔒</span>
+        <span class="icon"></span>
         <input type="password" name="password" placeholder="Password" required>
       </div>
       <button type="submit" class="btn">Login</button>
